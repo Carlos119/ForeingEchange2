@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="ForeingEchange2.Views.MainView"
+             BackgroundColor="White"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}">
+    <ContentPage.Padding>
+            <OnPlatform 
+                x:TypeArguments="Thickness"
+               iOS="20,30,20,10"
+               Android="10,10,10,10"/>
+    </ContentPage.Padding>
+	<ContentPage.Content>
+    <!-- Apila  verticalmente -->
+        <StackLayout>
+            <Label Text="Foreign Exchange" FontSize="Large" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   Margin="10">
+            </Label>
+                   
+            <Grid>
+                <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".5*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width=".5*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0"
+                    Text="Amount:" VerticalOptions="Center"></Label>
+                
+                <Entry Grid.Row="0" Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Placeholder="Enter the amount to convert..."
+                    Text="{Binding Amount, Mode=TwoWay}"></Entry>
+                
+                <Label Text="Source rate:"
+                    Grid.Row="1" Grid.Column="0"
+                    VerticalOptions="Center"></Label>
+                
+                <Picker Grid.Row="1" Grid.Column="1"
+                    Title="Select a surce rate"
+                    ItemDisplayBinding="{Binding Name}"
+                    ItemsSource="{Binding Rates}"
+                    SelectedItem="{Binding SourceRate, Mode=TwoWay}"></Picker>
+                
+                <Label Text="Target rate:" Grid.Row="2" 
+                    VerticalOptions="Center"
+                    Grid.Column="0"></Label>
+                
+                 <Picker Grid.Row="2" Grid.Column="1"
+                    Title="Select a target rate"
+                    ItemDisplayBinding="{Binding Name}"
+                    ItemsSource="{Binding Rates}"
+                    SelectedItem="{Binding TargetRate, Mode=TwoWay}"></Picker>
+                <Image
+                    Source="change.png" Grid.Row="1" Grid.Column="2"
+                    Grid.RowSpan="2" HeightRequest="40" WidthRequest="40">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SwitchCommand}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+
+            <ActivityIndicator 
+            IsRunning="{Binding IsRunning, Mode=TwoWay}"></ActivityIndicator>
+            
+            <Button Text="Convert" BackgroundColor="Silver" 
+                    TextColor="White" FontAttributes="Bold"
+                    BorderRadius="25" HeightRequest="50"
+                    Command="{Binding ConvertCommand}"
+                    IsEnabled="{Binding IsEnable, Mode=TwoWay}"></Button>
+            
+            <Label Text="{Binding Result, Mode=TwoWay}" BackgroundColor="Gray" 
+                   VerticalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center" Margin="0,10"
+                    FontSize="Large"></Label>
+            
+        </StackLayout>
+	</ContentPage.Content>
+</ContentPage>
