@@ -1,14 +1,15 @@
-﻿using Xamarin.Forms;
-
+﻿
 namespace ForeingEchange2
 {
+	using Xamarin.Forms;
+    using Views;
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
 
-            MainPage = new ForeingEchange2Page();
+            MainPage = new MainView();
         }
 
         protected override void OnStart()
