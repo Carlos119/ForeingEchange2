@@ -10,11 +10,18 @@
     using Newtonsoft.Json;
     using System.Collections.Generic;
     using Xamarin.Forms;
+    using ForeingEchange2.Helpers;
 
     public class MainViewModel : INotifyPropertyChanged
     {
+
+        //Me quede en el video numero 13 por si quieres continuar con lo de la base de datos local
         #region Events
         public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
+
+        #region Services
+        ApiService apiService;
         #endregion
 
         #region Attributes
@@ -23,11 +30,29 @@
         string _Result;
         Rate _SourceRate;
         Rate _TargetRate;
+        String _Status;
         ObservableCollection<Rate> _Rates;
         #endregion
 
 
         #region Properties
+
+        public string Status
+        {
+            get
+            {
+                return _Status;
+            }
+            set
+            {
+                if (_Status != value)
+                {
+                    _Status = value;
+                    // te no tificara cuando el valor de IsRunning cambie 
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+                }
+            }
+        }
         public string Amount
         {
             get;
@@ -160,8 +185,8 @@
             if (String.IsNullOrEmpty((Amount))){
 
                 await Application.Current.MainPage.DisplayAlert(
-                    "Error", "You must enter a value in amount",
-                    "Accept");
+                    Lenguages.Error, Lenguages.AmountValidation,
+                    Lenguages.Accept);
                 return;
             }
 
@@ -170,8 +195,8 @@
             if(!decimal.TryParse(Amount, out amount))
             {
                 await Application.Current.MainPage.DisplayAlert(
-              "Error", "You must enter a numeric value in amount",
-              "Accept");
+              Lenguages.Error, "You must enter a numeric value in amount",
+              Lenguages.Accept);
                 return;
             }
 
@@ -179,8 +204,8 @@
             {
 
                 await Application.Current.MainPage.DisplayAlert(
-                    "Error", "You must select a source rate",
-                    "Accept");
+                    Lenguages.Error, "You must select a source rate",
+                    Lenguages.Accept);
                 return;
             }
 
@@ -188,8 +213,8 @@
             {
 
                 await Application.Current.MainPage.DisplayAlert(
-                    "Error", "You must select a target rate",
-                    "Accept");
+                    Lenguages.Error, "You must select a target rate",
+                    Lenguages.Accept);
                 return;
 
             }
@@ -209,6 +234,7 @@
         #region Constructors
         public MainViewModel()
         {
+            apiService = new ApiService();
             LoadRates();
         }
         #region Methods
@@ -216,32 +242,33 @@
         {
             IsRunning = true;
             Result = "Loading rates...";
+
+
             //consumir API GET
-            try{
-                var client = new HttpClient();
-                client.BaseAddress = new 
-                    Uri("http://apiexchangerates.azurewebsites.net");
-                var controller = "/api/rates";
-                var response = await client.GetAsync(controller);
-                var result = await response.Content.ReadAsStringAsync();
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    IsRunning = false;
-                    Result = result;
-                }
+            var conection = await apiService.CheckConnection();
 
-                var rates = JsonConvert.DeserializeObject<List<Rate>>(result);
-                Rates = new ObservableCollection<Rate>(rates);
+            if(!conection.IsSuccess){
                 IsRunning = false;
-                IsEnable = true;
-                Result = "Ready to convert!";
+                Result = conection.Message;
+                return;
             }
-            catch (Exception ex){
-                IsRunning = false;
-                Result = ex.Message;
 
+            var response = 
+                await apiService.GetList<Rate>
+                   ("http://apiexchangerates.azurewebsites.net", "/api/rates");
+
+            if(!response.IsSuccess){
+                IsRunning = false;
+                Result = response.Message;
+                return;
             }
+
+            Rates = new ObservableCollection<Rate>((List<Rate>)response.Result);
+            IsRunning = false;
+            IsEnable = true;
+            Result = "Ready to convert";
+            Status = "Rates loades from the API";
         }
         #endregion
 

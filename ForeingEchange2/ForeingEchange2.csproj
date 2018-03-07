@@ -37,7 +37,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Resource.espa.resx">
+    <EmbeddedResource Include="Resources\Resource.es.resx">
       <Generator>NoCodeGeneration</Generator>
       <LastGenOutput>Resource_espa.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -68,6 +68,12 @@
     <Compile Include="Resources\Resource.Designer.cs">
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ILocalize.cs" />
+    <Compile Include="Helpers\PlatformCulture.cs" />
+    <Compile Include="Helpers\Lenguages.cs" />
+    <Compile Include="Helpers\TranslateExtension.cs" />
+    <Compile Include="ApiService.cs" />
+    <Compile Include="Models\Response.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">
@@ -97,6 +103,12 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Plugin.Connectivity.Abstractions">
+      <HintPath>..\packages\Xam.Plugin.Connectivity.3.1.1\lib\netstandard1.0\Plugin.Connectivity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.Connectivity">
+      <HintPath>..\packages\Xam.Plugin.Connectivity.3.1.1\lib\netstandard1.0\Plugin.Connectivity.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -107,6 +119,8 @@
     <Folder Include="Views\" />
     <Folder Include="Models\" />
     <Folder Include="Resources\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.5.0.121934\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.5.0.121934\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets')" />
